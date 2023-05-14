@@ -1,16 +1,16 @@
 resource "digitalocean_volume" "tyr_volume" {
   region                  = "sfo3"
   name                    = "tyr-volume"
-  size                    = 10
+  size                    = 5
   initial_filesystem_type = "ext4"
   description             = "tyr volume"
 }
 
 resource "digitalocean_droplet" "tyr_server" {
-  image  = "debian-11-x64"
+  image  = var.droplet_image
   name   = "tyr-server"
-  region = "sfo3"
-  size   = "s-1vcpu-1gb-intel"
+  region = var.region
+  size   = var.droplet_size
   ssh_keys = [
     var.ssh_key_fingerprint
   ]
