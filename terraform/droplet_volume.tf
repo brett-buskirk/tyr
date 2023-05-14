@@ -1,3 +1,8 @@
+data "digitalocean_ssh_key" "heimdall" {
+  name = "heimdall"
+}
+
+
 resource "digitalocean_volume" "tyr_volume" {
   region                  = "sfo3"
   name                    = "tyr-volume"
@@ -12,7 +17,7 @@ resource "digitalocean_droplet" "tyr_server" {
   region = var.region
   size   = var.droplet_size
   ssh_keys = [
-    var.ssh_key_fingerprint
+    data.digitalocean_ssh_key.heimdall.id
   ]
 }
 
