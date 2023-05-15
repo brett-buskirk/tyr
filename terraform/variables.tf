@@ -18,7 +18,7 @@ variable "droplet_image" {
 
 variable "droplet_size" {
   description = "Droplet size for server"
-  default     = "s-1vcpu-1gb-intel"
+  default     = "s-1vcpu-2gb-intel"
 }
 
 variable "ssh_public_key" {
