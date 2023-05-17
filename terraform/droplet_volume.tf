@@ -2,6 +2,14 @@ data "digitalocean_ssh_key" "heimdall" {
   name = "heimdall"
 }
 
+data "digitalocean_ssh_key" "frey" {
+  name = "frey"
+}
+
+data "digitalocean_ssh_key" "freyja" {
+  name = "freyja"
+}
+
 
 resource "digitalocean_volume" "tyr_volume" {
   region                  = "sfo3"
@@ -17,7 +25,9 @@ resource "digitalocean_droplet" "tyr_server" {
   region = var.region
   size   = var.droplet_size
   ssh_keys = [
-    data.digitalocean_ssh_key.heimdall.id
+    data.digitalocean_ssh_key.heimdall.id,
+    data.digitalocean_ssh_key.frey.id,
+    data.digitalocean_ssh_key.freyja.id
   ]
 }
 
