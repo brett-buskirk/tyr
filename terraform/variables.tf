@@ -20,8 +20,3 @@ variable "droplet_size" {
   description = "Droplet size for server"
   default     = "s-1vcpu-2gb-intel"
 }
-
-variable "ssh_public_key" {
-  description = "Local public ssh key"
-  default     = "~/.ssh/id_ed25519.pub"
-}
