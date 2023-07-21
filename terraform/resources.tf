@@ -10,6 +10,9 @@ resource "digitalocean_droplet" "tyr_server" {
   ssh_keys = [
     data.digitalocean_ssh_key.pixelbook.id,
   ]
+  tags = [
+    "webserver"
+  ]
 }
 
 resource "digitalocean_firewall" "tyr_firewall" {
@@ -18,12 +21,18 @@ resource "digitalocean_firewall" "tyr_firewall" {
   inbound_rule {
     protocol         = "tcp"
     port_range       = "22"
-    source_addresses = ["0.0.0.0/0", "::/0"]
+    source_addresses = [
+      var.inbound_home_ip,
+      var.inbound_static_ip
+    ]
   }
   inbound_rule {
     protocol         = "tcp"
     port_range       = "80"
-    source_addresses = ["0.0.0.0/0", "::/0"]
+    source_addresses = [
+      var.inbound_home_ip,
+      var.inbound_static_ip
+    ]
   }
   outbound_rule {
     protocol              = "tcp"
