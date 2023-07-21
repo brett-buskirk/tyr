@@ -8,7 +8,7 @@ variable "ssh_key_fingerprint" {
 
 variable "region" {
   description = "Digital Ocean Region"
-  default     = "sfo3"
+  default     = "nyc1"
 }
 
 variable "droplet_image" {
