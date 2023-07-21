@@ -10,19 +10,19 @@ The goal here is to use a few commands on a local machine to create a new cloud 
 
 ## Keys to the Kingdom ##
 
-In order for the project to work, one must first establish an SSH keypair and drop the public key in DO by going to the `Settings` -> `Security` tab and adding a new key. The SSH key fingerprint should be saved and will be included in the `secrets.tfvars` file in the form of:
+In order for the project to work, one must first establish an SSH keypair and drop the public key in DO by going to the `Settings` -> `Security` tab and adding a new key. The SSH key fingerprint should be saved and will be included in the `terraform.tfvars` file in the form of:
 
 ```hcl
     ssh_key_fingerprint = "[fingerprint_from_do]"
 ```
 
-Similarly, a PAT needs to be created on DO for connecting to the API. This can be found on the `API` -> `Tokens` tab. Make sure the scope is set to Read and Write, and be sure to copy the token once it is created, because you'll never get to see it again. Once copied, place the token in the `secrets.tfvars` file like so:
+Similarly, a PAT needs to be created on DO for connecting to the API. This can be found on the `API` -> `Tokens` tab. Make sure the scope is set to Read and Write, and be sure to copy the token once it is created, because you'll never get to see it again. Once copied, place the token in the `terraform.tfvars` file like so:
 
 ```hcl
     do_token = "[personal_access_token]"
 ```
 
-Note that the `secrets.tfvars` file does not exist in the repository. This file is protected from version control with `.gitignore`. This file needs to be created in the project's root directory, and the above values should be placed inside it.
+Note that the `terraform.tfvars` file does not exist in the repository. This file is protected from version control with `.gitignore`. This file needs to be created in the project's root directory, and the above values should be placed inside it.
 
 ---
 
