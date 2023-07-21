@@ -22,6 +22,13 @@ Similarly, a PAT needs to be created on DO for connecting to the API. This can b
     do_token = "[personal_access_token]"
 ```
 
+Now that there is an access mechanism, you need to specify the specific IP addresses that you want to have access the machine. This is done by adding the specific IP addresses to the `terraform.tfvars` file. In this case, there are two: one is the IP address of your home network, and the other belongs to a static IP address provided by a VPN provider (for those times when you're working remotely outside of your home network). If you don't have a static IP address from a VPN provider, just use the one associated with your home network:
+
+```hcl
+    inbound_home_ip: "[home_ip4_address]"
+    inbound_static_ip: "[static_ip4_address]"
+```
+
 Note that the `terraform.tfvars` file does not exist in the repository. This file is protected from version control with `.gitignore`. This file needs to be created in the project's root directory, and the above values should be placed inside it.
 
 ---
