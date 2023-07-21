@@ -1,22 +1,5 @@
-data "digitalocean_ssh_key" "heimdall" {
-  name = "heimdall"
-}
-
-data "digitalocean_ssh_key" "frey" {
-  name = "frey"
-}
-
-data "digitalocean_ssh_key" "freyja" {
-  name = "freyja"
-}
-
-
-resource "digitalocean_volume" "tyr_volume" {
-  region                  = "sfo3"
-  name                    = "tyr-volume"
-  size                    = 5
-  initial_filesystem_type = "ext4"
-  description             = "tyr volume"
+data "digitalocean_ssh_key" "pixelbook" {
+  name = "pixelbook"
 }
 
 resource "digitalocean_droplet" "tyr_server" {
@@ -25,15 +8,8 @@ resource "digitalocean_droplet" "tyr_server" {
   region = var.region
   size   = var.droplet_size
   ssh_keys = [
-    data.digitalocean_ssh_key.heimdall.id,
-    data.digitalocean_ssh_key.frey.id,
-    data.digitalocean_ssh_key.freyja.id
+    data.digitalocean_ssh_key.pixelbook.id,
   ]
-}
-
-resource "digitalocean_volume_attachment" "tyr_volume" {
-  droplet_id = digitalocean_droplet.tyr_server.id
-  volume_id  = digitalocean_volume.tyr_volume.id
 }
 
 resource "digitalocean_firewall" "tyr_firewall" {

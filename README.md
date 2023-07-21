@@ -56,8 +56,8 @@ This process creates a VM on Digital Ocean with the following properties:
 
 - **Image:** Debian 11 x64
 - **Size:** 1 Intel vCPU, 2 GB Memory
-- **Storage:** 50 GB disk + 5 GB
-- **Region:** SFO3
+- **Storage:** 50 GB disk
+- **Region:** NYC1
 - **Firewall:** Inbound: SSH, HTTP; Outbound: ICPM, All TCP, All UDP
 
 ---
