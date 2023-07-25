@@ -1,0 +1,4 @@
+ssh_key_fingerprint = "[do_ssh_key_fingerprint]"
+do_token = "[do_api_token]"
+inbound_home_ip = "[inbound_home_ip]"
+inbound_static_ip = "[inbound_static_ip]"
