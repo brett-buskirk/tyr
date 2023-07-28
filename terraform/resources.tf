@@ -46,6 +46,16 @@ resource "digitalocean_firewall" "tyr_firewall" {
     port_range            = "443"
     destination_addresses = ["0.0.0.0/0", "::/0"]
   }
+  outbound_rule {
+    protocol = "tcp"
+    port_range = "53"
+    destination_addresses = ["0.0.0.0/0", "::/0"]
+  }
+  outbound_rule {
+    protocol = "udp"
+    port_range = "53"
+    destination_addresses = ["0.0.0.0/0", "::/0"]
+  }
 }
 
 output "public_ip_server" {
