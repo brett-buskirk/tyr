@@ -19,8 +19,8 @@ resource "digitalocean_firewall" "tyr_firewall" {
   name        = "tyr-firewall"
   droplet_ids = [digitalocean_droplet.tyr_server.id]
   inbound_rule {
-    protocol         = "tcp"
-    port_range       = "22"
+    protocol   = "tcp"
+    port_range = "22"
     source_addresses = [
       var.inbound_home_ip,
       var.inbound_static_ip
@@ -29,24 +29,21 @@ resource "digitalocean_firewall" "tyr_firewall" {
   inbound_rule {
     protocol         = "tcp"
     port_range       = "80"
-    source_addresses = [
-      var.inbound_home_ip,
-      var.inbound_static_ip
-    ]
+    source_addresses = ["0.0.0.0/0", "::/0"]
+  }
+  inbound_rule {
+    protocol         = "tcp"
+    port_range       = "443"
+    source_addresses = ["0.0.0.0/0", "::/0"]
   }
   outbound_rule {
     protocol              = "tcp"
-    port_range            = "1-65535"
+    port_range            = "80"
     destination_addresses = ["0.0.0.0/0", "::/0"]
   }
   outbound_rule {
-    protocol              = "icmp"
-    port_range            = "1-65535"
-    destination_addresses = ["0.0.0.0/0", "::/0"]
-  }
-  outbound_rule {
-    protocol              = "udp"
-    port_range            = "1-65535"
+    protocol              = "tcp"
+    port_range            = "443"
     destination_addresses = ["0.0.0.0/0", "::/0"]
   }
 }
