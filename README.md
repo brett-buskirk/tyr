@@ -8,7 +8,7 @@ The goal here is to use a few commands on a local machine to create a new cloud 
 
 ---
 
-## Keys to the Kingdom ##
+## Terraform | Keys to the Kingdom ##
 
 In order for the project to work, one must first establish an SSH keypair and drop the public key in DO by going to the `Settings` -> `Security` tab and adding a new key. The SSH key fingerprint should be saved and will be included in the `terraform.tfvars` file in the form of:
 
@@ -33,7 +33,7 @@ Note that the `terraform.tfvars` file does not exist in the repository. This fil
 
 ---
 
-## Initializing and Launching the Project ##
+## Terraform | Initializing and Launching the Project ##
 
 Once the project is cloned to your local machine. Navigate a terminal to the `terraform` directory and initialize the terraform project:
 
@@ -57,7 +57,7 @@ You'll have to type `yes` in order to confirm the process. It'll take a little t
 
 ---
 
-## Machine Details ##
+## Terraform | Machine Details ##
 
 This process creates a VM on Digital Ocean with the following properties:
 
@@ -69,10 +69,76 @@ This process creates a VM on Digital Ocean with the following properties:
 
 ---
 
-## Destroying the Machine ##
+## Terraform | Destroying the Machine ##
 
 To destroy and tear down the infrastructure. Simply use the following command in the terraform directory:
 
 ```shell
     terraform destroy
 ```
+
+---
+
+## Ansible | Setting up the Inventory ##
+
+Before you can run the playbook, you must first set up the `inventory` file so that Ansible knows on which host to operate. The inventory file is protected by version control, so it is not checked into the repo. This INI file should be named `inventory`, exit in the `ansible` directory, and contain the following code:
+
+```
+[webservers]
+tyr ansible_host=<do_droplet_ip4> ansible_connection=ssh ansible_user=root 
+```
+
+The value, `<do_droplet_ip4>` is the IP address of the Digital Ocean droplet created by Terraform above. Once the inventory is in place, you can run the following command to make sure it aligns with what is expected:
+
+```shell
+ansible-inventory -i inventory --list
+```
+
+The output should look like the following:
+
+```shell
+{
+    "_meta": {
+        "hostvars": {
+            "tyr": {
+                "ansible_connection": "ssh",
+                "ansible_host": "<do_droplet_ip4>",
+                "ansible_user": "root"
+            }
+        }
+    },
+    "all": {
+        "children": [
+            "ungrouped",
+            "webservers"
+        ]
+    },
+    "webservers": {
+        "hosts": [
+            "tyr"
+        ]
+    }
+}
+```
+
+---
+
+## Ansible | Running the Playbook ##
+
+Provisioning the server is accomplished by running the following command from within the `ansible` directory:
+
+```shell
+ansible-playbook -i inventory playbook.yml
+```
+
+This provisioning runs the following tasks on the remote machine:
+
+- Set up passwordless sudo
+- Create a new user with sudo privileges
+- Copy over local public ssh key for remote access
+- Disable password authentication for root
+- Update apt cache and install Nginx
+- Copy website files to the server
+- Apply the Nginx template
+- Enable the new site
+- Restart Nginx service
