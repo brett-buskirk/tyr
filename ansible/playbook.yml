@@ -36,6 +36,11 @@
         regexp: '^#?PermitRootLogin'
         line: 'PermitRootLogin prohibit-password'
 
+    - name: Install Git
+      apt:
+        name: git
+        state: present
+
     - name: Update apt cache and install Nginx
       apt:
         name: nginx
