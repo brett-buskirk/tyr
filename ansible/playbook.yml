@@ -5,7 +5,9 @@
     created_username: odin
     server_name: "{{ ansible_default_ipv4.address }}"
     document_root: /var/www/html
-    app_root: html_demo_site-main
+    project_dir: /root/{{ app_root }}
+  vars_files:
+    - external_vars.yml
   tasks:
     - name: Setup passwordless sudo
       lineinfile:
@@ -14,6 +16,8 @@
         regexp: '^%sudo'
         line: '%sudo ALL=(ALL) NOPASSWD: ALL'
         validate: '/usr/sbin/visudo -cf %s'
+      tags:
+        - sudo
 
     - name: Create a new regular user with sudo privileges
       user:
@@ -22,12 +26,16 @@
         groups: sudo
         append: true
         create_home: true
+      tags:
+        - create-user
 
     - name: Set authorized key for remote user
       ansible.posix.authorized_key:
         user: "{{ created_username }}"
         state: present
         key: "{{ lookup('file', lookup('env', 'HOME') + '/.ssh/id_ed25519.pub') }}"
+      tags:
+        - create-user
 
     - name: Disable password authentication for root
       lineinfile:
@@ -35,29 +43,82 @@
         state: present
         regexp: '^#?PermitRootLogin'
         line: 'PermitRootLogin prohibit-password'
+      tags:
+        - disable-password
 
     - name: Install Git
       apt:
         name: git
         state: present
+      tags:
+        - git
+
+    - name: Checkout GitHub react project repository
+      git:
+        repo: "{{ react_repo }}"
+        dest: "{{ project_dir }}"
+      tags:
+        - git
+        - checkout-repo
+
+    - name: Install nodejs
+      apt:
+        name: nodejs
+        state: present
+      tags:
+        - nodejs
+
+    - name: Install npm
+      apt:
+        name: npm
+        state: present
+        update_cache: yes
+      tags:
+        - npm
+
+    - name: Install npm packages for react project
+      npm:
+        path: "{{ project_dir }}"
+      tags:
+        - npm-packages
+
+    - name: Create build from react project
+      shell: npm run build
+      args:
+        chdir: "{{ project_dir }}"
+      tags:
+        - build
 
     - name: Update apt cache and install Nginx
       apt:
         name: nginx
         state: latest
         update_cache: yes
+      tags:
+        - nginx
 
-    - name: Copy website files to the server's document root
-      copy:
-        src: "{{ app_root }}"
-        dest: "{{ document_root }}"
-        mode: preserve
+    - name: Install rsync
+      apt:
+        name: rsync
+      tags:
+        - rsync
+
+    - name: Copy build files to the server's document root
+      synchronize:
+        src: "{{ project_dir }}/build/"
+        dest: "{{ document_root }}/{{ app_root }}"
+      delegate_to: "{{ inventory_hostname }}"
+      tags:
+        - copy
 
     - name: Apply Nginx template
       template:
         src: files/nginx.conf.j2
         dest: /etc/nginx/sites-available/default
       notify: Restart Nginx
+      tags:
+        - nginx
+        - nginx-template
 
     - name: Enable new site
       file:
@@ -65,9 +126,15 @@
         dest: /etc/nginx/sites-enabled/default
         state: link
       notify: Restart Nginx
+      tags:
+        - nginx
+        - nginx-enable
 
   handlers:
     - name: Restart Nginx
       service:
         name: nginx
         state: restarted
+      tags:
+        - nginx
+        - nginx-restart

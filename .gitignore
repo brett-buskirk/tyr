@@ -24,3 +24,6 @@ terraform.rc
 
 # Ignore ansible inventory
 inventory
+
+# Ignore ansible external vars
+external_vars.yml

@@ -47,13 +47,13 @@ resource "digitalocean_firewall" "tyr_firewall" {
     destination_addresses = ["0.0.0.0/0", "::/0"]
   }
   outbound_rule {
-    protocol = "tcp"
-    port_range = "53"
+    protocol              = "tcp"
+    port_range            = "53"
     destination_addresses = ["0.0.0.0/0", "::/0"]
   }
   outbound_rule {
-    protocol = "udp"
-    port_range = "53"
+    protocol              = "udp"
+    port_range            = "53"
     destination_addresses = ["0.0.0.0/0", "::/0"]
   }
 }
