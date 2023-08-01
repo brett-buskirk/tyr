@@ -1,0 +1,3 @@
+---
+app_root: [name_of_project_root_directory]
+react_repo: [url_for_react_project_repo]
